@@ -440,6 +440,15 @@ public class RouteController {
     }
   }
   
+  /**
+   * Attempts to set the enrollment count for a specific course.
+   *
+   * @param deptCode   A {@code String} representing the department.
+   * @param courseCode A {@code int} representing the course within the department.
+   * @param count      A {@code int} representing the number of students within the course.
+   * @return A {@code ResponseEntity} object containing an HTTP 200 response with an appropriate
+   *     message or the proper status code in tune with what has happened.
+   */
   
   @PatchMapping(value = "/setEnrollmentCount",
       produces = MediaType.APPLICATION_JSON_VALUE)
@@ -559,7 +568,15 @@ public class RouteController {
     }
   }
   
-  
+  /**
+   * Attempts to change the location of a already logged course.
+   *
+   * @param deptCode   A {@code String} representing the department.
+   * @param courseCode A {@code int} representing the course within the department.
+   * @param location   A {@code String} representing the location in which the course occurs.
+   * @return A {@code ResponseEntity} object containing an HTTP 200 response with an appropriate
+   *     message or the proper status code in tune with what has happened.
+   */
   @PatchMapping(value = "/changeCourseLocation",
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> changeCourseLocation(

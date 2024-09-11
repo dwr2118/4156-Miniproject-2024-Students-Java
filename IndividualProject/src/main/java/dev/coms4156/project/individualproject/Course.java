@@ -3,6 +3,10 @@ package dev.coms4156.project.individualproject;
 import java.io.Serial;
 import java.io.Serializable;
 
+
+/**
+ * The Course class allows for us to dynamically assign different attributes to different classes.
+ */
 public class Course implements Serializable {
   
   /**
@@ -15,8 +19,8 @@ public class Course implements Serializable {
    */
   public Course(String instructorName, String courseLocation, String timeSlot,
                 int capacity) {
-    this.courseLocation = courseLocation;
     this.instructorName = instructorName;
+    this.courseLocation = courseLocation;
     this.courseTimeSlot = timeSlot;
     this.enrollmentCapacity = capacity;
     this.enrolledStudentCount = 500;
