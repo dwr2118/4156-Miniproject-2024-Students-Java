@@ -25,7 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
  */
 @SpringBootTest
 @ContextConfiguration
-public class DatabaseUnitTests {
+public class RouteUnitTests {
   
   /**
    * We are creating a database with two departments (COMS & ECON) and one courses per department
