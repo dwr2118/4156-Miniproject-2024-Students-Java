@@ -68,7 +68,7 @@ public class DatabaseUnitTests {
    * This cleans up the created testingDB & invalidDB from the tests. 
    */
   @AfterAll
-  public static void cleanupTest(){
+  public static void cleanupTest() {
     File testFile = new File(testFilePath);
     File testInvalidDb = new File(testDbPath);
     testFile.delete();

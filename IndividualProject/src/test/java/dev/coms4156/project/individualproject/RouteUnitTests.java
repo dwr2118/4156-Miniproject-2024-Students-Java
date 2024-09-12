@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 import java.util.HashMap;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,11 +12,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.test.context.ContextConfiguration;
+
 
 /**
  * This is just testing if we can read our database from the ./data.txt file
@@ -53,9 +53,11 @@ public class RouteUnitTests {
    */
   @Test
   public void indexRouteTest() {
-    String expectedResult = "Welcome, in order to make an API call direct your browser or Postman to an endpoint "
+    String expectedResult = "Welcome, in order to make an API call direct your browser or"
+        + " Postman to an endpoint "
         + "\n\n This can be done using the following format: \n\n http:127.0.0"
         + ".1:8080/endpoint?arg=value";
+
     assertEquals(expectedResult, testRouteController.index());
   }
   
