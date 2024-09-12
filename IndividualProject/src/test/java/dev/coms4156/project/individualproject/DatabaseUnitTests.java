@@ -28,10 +28,15 @@ public class DatabaseUnitTests {
   
   /**
    * We are creating a database with two departments (COMS & ECON) and one courses per department
-   * for simplicity sake. 
+   * for simplicity sake. Deleteing the files for a cleaner testing environment. 
    */
   @BeforeAll
   public static void setupDatabaseForTesting() {
+
+    File testFile = new File(testFilePath);
+    File testInvalidDb = new File(testDbPath);
+    testFile.delete();
+    testInvalidDb.delete();
 
     testDatabase = new MyFileDatabase(1, testFilePath);
     HashMap<String, Course> courses = new HashMap<>();
@@ -99,16 +104,28 @@ public class DatabaseUnitTests {
   @Test
   public void deSerializeInvalidTest() {
     try (ObjectOutputStream out = new ObjectOutputStream(
-        new FileOutputStream("./invalidDB.txt"))) {
+        new FileOutputStream(testDbPath))) {
       out.writeObject("This is a string, not a HashMap!");
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    MyFileDatabase invalidDb = new MyFileDatabase(1, "./invalidDB.txt");
+    MyFileDatabase invalidDb = new MyFileDatabase(1, testDbPath);
     assertThrows(IllegalArgumentException.class, () -> {
       invalidDb.deSerializeObjectFromFile();
     });
+  }
+
+  /**
+   * This test attempts to check if there was data written to our testDB file. 
+   */
+  @Test
+  public void invalidSaveTest() {
+
+    testDatabase.saveContentsToFile();
+    File file = new File(testFilePath);
+
+    assertTrue(file.exists() && file.length() > 0);
   }
   
   /**
@@ -116,5 +133,6 @@ public class DatabaseUnitTests {
    */
   public static MyFileDatabase testDatabase;
   public static String testFilePath = "./testingDB.txt";
+  public static String testDbPath = "./invalidDB.txt";
 }
 
