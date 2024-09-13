@@ -177,7 +177,7 @@ public class RouteUnitTests {
   @Test
   public void isCourseFullInvalidInputTest() {
     String expectedResult = "An Error has occurred 500 INTERNAL_SERVER_ERROR";
-    ResponseEntity<?> response = testRouteController.isCourseFull("COMS",null);
+    ResponseEntity<?> response = testRouteController.isCourseFull("COMS", null);
     HttpStatusCode responseStatus = response.getStatusCode();
     String responseString = response.getBody() + " " + responseStatus.toString();
     assertEquals(expectedResult, responseString);
@@ -189,10 +189,340 @@ public class RouteUnitTests {
    */
   @Test
   public void getMajorCtFromValidDeptTest() {
-    String expectedResult = "There are: 2700 majors in the department 200 OK";
-    ResponseEntity<?> response = testRouteController.getMajorCtFromDept("COMS");
+    String expectedResult = "There are: 2345 majors in the department 200 OK";
+    ResponseEntity<?> response = testRouteController.getMajorCtFromDept("ECON");
     HttpStatusCode responseStatus = response.getStatusCode();
     String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to see if we can grab the number of philosophy majors within our 
+   * database. 
+   */
+  @Test
+  public void getMajorCtFromInvalidDeptTest() {
+    String expectedResult = "Department Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.getMajorCtFromDept("PHIL");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  // /**
+  //  * Testing to see if we can grab the number of majors if the inputted 
+  //  * department is null. 
+  //  */
+  // @Test
+  // public void getMajorCtFromInvalidInputDeptTest() {
+  //   String expectedResult = "An Error has occurred 500 INTERNAL_SERVER_ERROR";
+  //   ResponseEntity<?> response = testRouteController.getMajorCtFromDept(null);
+  //   HttpStatusCode responseStatus = response.getStatusCode();
+  //   String responseString = response.getBody() + " " + responseStatus.toString();
+  //   assertEquals(expectedResult, responseString);
+  // }
+
+  /**
+   * Testing to see if we can grab the CS's department's Department Chair.
+   */
+  @Test
+  public void getValidDeptChairTest() {
+    String expectedResult =  "Luca Carloni is the department chair. 200 OK";
+    ResponseEntity<?> response = testRouteController.identifyDeptChair("COMS");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to see if we can grab the philosophy department's chair. 
+   */
+  @Test
+  public void getInvalidDeptChairTest() {
+    String expectedResult =  "Department Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.identifyDeptChair("PHIL");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to see if we can grab the course location for a student taking 
+   * 1004 within the compsci department. 
+   */
+  @Test
+  public void getValidCourseLocationTest() {
+    String expectedResult =  "417 IAB is where the course is located. 200 OK";
+    ResponseEntity<?> response = testRouteController.findCourseLocation("COMS", 1004);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to see if we can grab the course location for a student taking 
+   * 4995, which is not within our database, within the compsci department. 
+   */
+  @Test
+  public void getInvalidCourseLocationTest() {
+    String expectedResult =  "Course Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.findCourseLocation("COMS", 4995);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to see if we can grab the instructor teachin COMS 1004 within our database. 
+   */
+  @Test
+  public void getValidCourseInstructorTest() {
+    String expectedResult =  "Adam Cannon is the instructor for the course. 200 OK";
+    ResponseEntity<?> response = testRouteController.findCourseInstructor("COMS", 1004);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to see if we can grab the instructor teachin COMS 4995
+   * which is not within our database. 
+   */
+  @Test
+  public void getInvalidCourseInstructorTest() {
+    String expectedResult =  "Course Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.findCourseInstructor("COMS", 4995);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to see if we can grab the course time for a course within our database. 
+   */
+  @Test
+  public void getValidCourseTimeTest() {
+    String expectedResult =  "The course meets at: 11:40-12:55 200 OK";
+    ResponseEntity<?> response = testRouteController.findCourseTime("COMS", 1004);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to see if we can grab the course time for a course NOT within our database. 
+   */
+  @Test
+  public void getInvalidCourseTimeTest() {
+    String expectedResult =  "Course Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.findCourseTime("COMS", 4995);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to see if we can add a new student major to an existing department. 
+   * We then drop this student major to prevent issues with other tests.
+   */
+  @Test
+  public void addMajorToValidDeptTest() {
+    String expectedResult =  "Attribute was updated successfully. 200 OK";
+    ResponseEntity<?> response = testRouteController.addMajorToDept("COMS");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+    testRouteController.removeMajorFromDept("COMS");
+  }
+
+  /**
+   * Testing to see if we can add a new student major to an nonexisting department. 
+   * 
+   */
+  @Test
+  public void addMajorToInvalidDeptTest() {
+    String expectedResult =  "Department Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.addMajorToDept("PHIL");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to see if we can remove an old student major from an existing department. 
+   * We then add this student major to prevent issues with other tests.
+   */
+  @Test
+  public void removeMajorFromValidDeptTest() {
+    String expectedResult =  "Attribute was updated or is at minimum 200 OK";
+    ResponseEntity<?> response = testRouteController.removeMajorFromDept("COMS");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+    testRouteController.addMajorToDept("COMS");
+  }
+
+  /**
+   * Testing to see if we can remove an old student major from a nonexisting department. 
+   * 
+   */
+  @Test
+  public void removeMajorFromInvalidDeptTest() {
+    String expectedResult =  "Department Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.removeMajorFromDept("PHIL");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Test to ensure ability to dropStudents from a course. 
+   */
+  @Test
+  public void dropStudentValidCourseTest() {
+    String expectedResult =  "Student has been dropped. 200 OK";
+    ResponseEntity<?> response = testRouteController.dropStudent("COMS", 1004);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Test to ensure ability to dropStudents from a nonexisiting course. 
+   */
+  @Test
+  public void dropStudentInvalidCourseTest() {
+    String expectedResult =  "Course Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.dropStudent("COMS", 4995);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to ensure there's no functionality 
+   * to drop students from an empty course. Test must return the enrollment count
+   * to an integer value to avoid issues with other tests. 
+   */
+  @Test
+  public void dropStudentEmptyCourseTest() {
+    String expectedResult =  "Student has not been dropped. 400 BAD_REQUEST";
+    testRouteController.setEnrollmentCount("COMS", 1004, 0);
+    ResponseEntity<?> response = testRouteController.dropStudent("COMS", 1004);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+    testRouteController.setEnrollmentCount("COMS", 1004, 1000);
+  }
+
+  /**
+   * Testing to ensure we can edit the enrollment count of a course.  
+   */
+  @Test
+  public void setValidEnrollmentCountTest() {
+    String expectedResult =  "Attribute was updated successfully. 200 OK";
+    ResponseEntity<?> response = testRouteController.setEnrollmentCount("COMS", 1004, 1000);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to ensure we will not be able to edit enrollment count
+   * for a course that doesn't exist. 
+   */
+  @Test
+  public void setInvalidEnrollmentCountTest() {
+    String expectedResult =  "Course Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.setEnrollmentCount("COMS", 4995, 1000);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to ensure we can change the course time of a valid course. 
+   */
+  @Test
+  public void changeValidCourseTimeTest() {
+    String expectedResult =  "Attribute was updated successfully. 200 OK";
+    ResponseEntity<?> response = testRouteController.changeCourseTime("ELEN", 1201, "4:10-6:40");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to ensure we are not able to change the course time of an invalid course. 
+   */
+  @Test
+  public void changeInvalidCourseTimeTest() {
+    String expectedResult =  "Course Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.changeCourseTime("ELEN", 4995, "4:10-6:40");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to make sure we can change the instructor of a valid course. 
+   */
+  @Test
+  public void changeValidCourseTeacherTest() {
+    String expectedResult =  "Attribute was updated successfully. 200 OK";
+    ResponseEntity<?> response = testRouteController.changeCourseTeacher("PSYC", 1001, "Darwin");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to make sure we can change the instructor of an invalid course. 
+   */
+  @Test
+  public void changeInvalidCourseTeacherTest() {
+    String expectedResult =  "Course Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.changeCourseTeacher("PSYC", 4995, "Darwin");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to make sure we can change the course location of a valid course. 
+   */
+  @Test
+  public void changeValidCourseLocationTest() {
+    String expectedResult =  "Attribute was updated successfully. 200 OK";
+    ResponseEntity<?> response = testRouteController.changeCourseLocation("PSYC", 4493, "417 IAB");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+  }
+  
+  /**
+   * Testing to make sure we can change the course location of a valid course. 
+   */
+  @Test
+  public void changeInvalidCourseLocationTest() {
+    String expectedResult =  "Course Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.changeCourseLocation("PSYC", 1004, "417 IAB");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
     assertEquals(expectedResult, responseString);
   }
   

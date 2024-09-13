@@ -47,8 +47,12 @@ public class Course implements Serializable {
    */
   public boolean dropStudent() {
     
-    enrolledStudentCount--;
-    return true;
+    if (enrolledStudentCount == 0) {
+      return false;
+    } else {
+      enrolledStudentCount--;
+      return true;
+    }
   }
   
   public String getCourseLocation() {
