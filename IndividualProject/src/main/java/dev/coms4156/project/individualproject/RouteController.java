@@ -48,12 +48,12 @@ public class RouteController {
       departmentMapping =
           IndividualProjectApplication.myFileDatabase.getDepartmentMapping();
       
-      if (!departmentMapping.containsKey(deptCode.toUpperCase())) {
-        return new ResponseEntity<>("Department Not Found", HttpStatus.OK);
-      } else {
+      if (departmentMapping.containsKey(deptCode.toUpperCase())) {
         return new ResponseEntity<>(
             departmentMapping.get(deptCode.toUpperCase()).toString(),
-            HttpStatus.NOT_FOUND);
+            HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>("Department Not Found", HttpStatus.NOT_FOUND);
       }
       
     } catch (Exception e) {
@@ -77,7 +77,7 @@ public class RouteController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> retrieveCourse(
       @RequestParam(value = "deptCode") String deptCode,
-      @RequestParam(value = "courseCode") int courseCode) {
+      @RequestParam(value = "courseCode") Integer courseCode) {
     
     try {
       boolean doesDepartmentExists =
@@ -89,12 +89,14 @@ public class RouteController {
         HashMap<String, Course> coursesMapping;
         coursesMapping = departmentMapping.get(deptCode).getCourseSelection();
         
-        if (!coursesMapping.containsKey(Integer.toString(courseCode))) {
-          return new ResponseEntity<>("Course Not Found", HttpStatus.NOT_FOUND);
-        } else {
+        if (coursesMapping.containsKey(Integer.toString(courseCode))) {
           return new ResponseEntity<>(
               coursesMapping.get(Integer.toString(courseCode)).toString(),
-              HttpStatus.FORBIDDEN);
+              HttpStatus.OK);
+          
+        } else {
+          return new ResponseEntity<>("Course Not Found", HttpStatus.NOT_FOUND);
+
         }
         
       }
@@ -119,14 +121,14 @@ public class RouteController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> isCourseFull(
       @RequestParam(value = "deptCode") String deptCode,
-      @RequestParam(value = "courseCode") int courseCode) {
+      @RequestParam(value = "courseCode") Integer courseCode) {
     
     try {
       boolean doesCourseExists;
-      doesCourseExists =
-          retrieveCourse(deptCode, courseCode).getStatusCode() == HttpStatus.OK;
+      ResponseEntity<?> retrievedCourseResponse = retrieveCourse(deptCode, courseCode);
+      Integer retrieveCourseStatus = retrievedCourseResponse.getStatusCodeValue();
       
-      if (doesCourseExists) {
+      if (retrieveCourseStatus == 200) {
         HashMap<String, Department> departmentMapping;
         departmentMapping =
             IndividualProjectApplication.myFileDatabase.getDepartmentMapping();
@@ -137,8 +139,11 @@ public class RouteController {
             coursesMapping.get(Integer.toString(courseCode));
         return new ResponseEntity<>(requestedCourse.isCourseFull(),
             HttpStatus.OK);
-      } else {
+      } else if (retrieveCourseStatus == 404) {
         return new ResponseEntity<>("Course Not Found", HttpStatus.NOT_FOUND);
+
+      } else {
+        throw new NullPointerException("Department and course are not available options.");
       }
       
     } catch (Exception e) {
@@ -160,17 +165,19 @@ public class RouteController {
   public ResponseEntity<?> getMajorCtFromDept(
       @RequestParam(value = "deptCode") String deptCode) {
     try {
+
       boolean doesDepartmentExists =
           retrieveDepartment(deptCode).getStatusCode() == HttpStatus.OK;
+
       if (doesDepartmentExists) {
         HashMap<String, Department> departmentMapping;
         departmentMapping =
             IndividualProjectApplication.myFileDatabase.getDepartmentMapping();
         return new ResponseEntity<>(
-            "There are: " + -departmentMapping.get(deptCode).getNumberOfMajors()
+            "There are: " + departmentMapping.get(deptCode).getNumberOfMajors()
             + " majors in the department", HttpStatus.OK);
       }
-      return new ResponseEntity<>("Department Not Found", HttpStatus.FORBIDDEN);
+      return new ResponseEntity<>("Department Not Found", HttpStatus.NOT_FOUND);
     } catch (Exception e) {
       return handleException(e);
     }
@@ -221,7 +228,7 @@ public class RouteController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> findCourseLocation(
       @RequestParam(value = "deptCode") String deptCode,
-      @RequestParam(value = "courseCode") int courseCode) {
+      @RequestParam(value = "courseCode") Integer courseCode) {
     
     try {
       boolean doesCourseExists;
@@ -264,7 +271,7 @@ public class RouteController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> findCourseInstructor(
       @RequestParam(value = "deptCode") String deptCode,
-      @RequestParam(value = "courseCode") int courseCode) {
+      @RequestParam(value = "courseCode") Integer courseCode) {
     
     try {
       boolean doesCourseExists;
@@ -307,7 +314,7 @@ public class RouteController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> findCourseTime(
       @RequestParam(value = "deptCode") String deptCode,
-      @RequestParam(value = "courseCode") int courseCode) {
+      @RequestParam(value = "courseCode") Integer courseCode) {
     try {
       boolean doesCourseExists;
       doesCourseExists =
@@ -322,7 +329,7 @@ public class RouteController {
         
         Course requestedCourse =
             coursesMapping.get(Integer.toString(courseCode));
-        return new ResponseEntity<>("The course meets at: " + "some time ",
+        return new ResponseEntity<>("The course meets at: "+ requestedCourse.getCourseTimeSlot(),
             HttpStatus.OK);
       } else {
         return new ResponseEntity<>("Course Not Found", HttpStatus.NOT_FOUND);
@@ -354,7 +361,7 @@ public class RouteController {
         
         Department specifiedDept = departmentMapping.get(deptCode);
         specifiedDept.addPersonToMajor();
-        return new ResponseEntity<>("Attribute was updated successfully",
+        return new ResponseEntity<>("Attribute was updated successfully.",
             HttpStatus.OK);
       }
       return new ResponseEntity<>("Department Not Found", HttpStatus.NOT_FOUND);
@@ -407,7 +414,7 @@ public class RouteController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> dropStudent(
       @RequestParam(value = "deptCode") String deptCode,
-      @RequestParam(value = "courseCode") int courseCode) {
+      @RequestParam(value = "courseCode") Integer courseCode) {
     
     try {
       boolean doesCourseExists;
@@ -454,7 +461,7 @@ public class RouteController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> setEnrollmentCount(
       @RequestParam(value = "deptCode") String deptCode,
-      @RequestParam(value = "courseCode") int courseCode,
+      @RequestParam(value = "courseCode") Integer courseCode,
       @RequestParam(value = "count") int count) {
     
     try {
@@ -472,7 +479,7 @@ public class RouteController {
         Course requestedCourse =
             coursesMapping.get(Integer.toString(courseCode));
         requestedCourse.setEnrolledStudentCount(count);
-        return new ResponseEntity<>("Attributed was updated successfully.",
+        return new ResponseEntity<>("Attribute was updated successfully.",
             HttpStatus.OK);
       } else {
         return new ResponseEntity<>("Course Not Found", HttpStatus.NOT_FOUND);
@@ -497,7 +504,7 @@ public class RouteController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> changeCourseTime(
       @RequestParam(value = "deptCode") String deptCode,
-      @RequestParam(value = "courseCode") int courseCode,
+      @RequestParam(value = "courseCode") Integer courseCode,
       @RequestParam(value = "time") String time) {
     
     try {
@@ -515,7 +522,7 @@ public class RouteController {
         Course requestedCourse =
             coursesMapping.get(Integer.toString(courseCode));
         requestedCourse.reassignTime(time);
-        return new ResponseEntity<>("Attributed was updated successfully.",
+        return new ResponseEntity<>("Attribute was updated successfully.",
             HttpStatus.OK);
       } else {
         return new ResponseEntity<>("Course Not Found", HttpStatus.NOT_FOUND);
@@ -541,7 +548,7 @@ public class RouteController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> changeCourseTeacher(
       @RequestParam(value = "deptCode") String deptCode,
-      @RequestParam(value = "courseCode") int courseCode,
+      @RequestParam(value = "courseCode") Integer courseCode,
       @RequestParam(value = "teacher") String teacher) {
     try {
       boolean doesCourseExists;
@@ -558,7 +565,7 @@ public class RouteController {
         Course requestedCourse =
             coursesMapping.get(Integer.toString(courseCode));
         requestedCourse.reassignInstructor(teacher);
-        return new ResponseEntity<>("Attributed was updated successfully.",
+        return new ResponseEntity<>("Attribute was updated successfully.",
             HttpStatus.OK);
       } else {
         return new ResponseEntity<>("Course Not Found", HttpStatus.NOT_FOUND);
@@ -581,7 +588,7 @@ public class RouteController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> changeCourseLocation(
       @RequestParam(value = "deptCode") String deptCode,
-      @RequestParam(value = "courseCode") int courseCode,
+      @RequestParam(value = "courseCode") Integer courseCode,
       @RequestParam(value = "location") String location) {
     try {
       boolean doesCourseExists;
@@ -598,7 +605,7 @@ public class RouteController {
         Course requestedCourse =
             coursesMapping.get(Integer.toString(courseCode));
         requestedCourse.reassignLocation(location);
-        return new ResponseEntity<>("Attributed was updated successfully.",
+        return new ResponseEntity<>("Attribute was updated successfully.",
             HttpStatus.OK);
       } else {
         return new ResponseEntity<>("Course Not Found", HttpStatus.NOT_FOUND);
@@ -609,8 +616,8 @@ public class RouteController {
   }
   
   private ResponseEntity<?> handleException(Exception e) {
-    System.out.println(e.toString());
-    return new ResponseEntity<>("An Error has occurred", HttpStatus.OK);
+    System.out.println("An exception has occurred: " + e.toString());
+    return new ResponseEntity<>("An Error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
   }
   
   
