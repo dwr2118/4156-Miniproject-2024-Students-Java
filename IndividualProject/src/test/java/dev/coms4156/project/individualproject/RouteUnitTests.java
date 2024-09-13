@@ -112,8 +112,9 @@ public class RouteUnitTests {
   }
 
   /**
-   * We are testing to see if we can input a valid department and invalid course within said department
-   * to retrieve an error message from the database stating that the course was not found. 
+   * We are testing to see if we can input a valid department and invalid course within 
+   * said department to retrieve an error message from the database stating that the course 
+   * was not found. 
    */
   @Test
   public void retrieveInvalidCourseValidDepartmentTest() {
@@ -124,7 +125,8 @@ public class RouteUnitTests {
 
   /**
    * We are testing to see if we can input an invalid department but valid course within another 
-   * department to retrieve an error message from the database stating that the department was not found. 
+   * department to retrieve an error message from the database stating that the department was not 
+   * found. 
    */
   @Test
   public void retrieveValidCourseInvalidDepartmentTest() {
@@ -150,9 +152,48 @@ public class RouteUnitTests {
   @Test
   public void isCourseFullValidTest() {
     String expectedResult = "200 OK";
-    ResponseEntity<?> response = testRouteController.retrieveCourse("IEOR", 3404);
+    ResponseEntity<?> response = testRouteController.isCourseFull("IEOR", 3404);
     HttpStatusCode responseStatus = response.getStatusCode();
     assertEquals(expectedResult, responseStatus.toString());
+  }
+
+  /**
+   * Testing to see if we can receive a 404 NOT_FOUND response when we try to retrieve an invalid
+   * course from a valid department. 
+   */
+  @Test
+  public void isCourseFullInvalidTest() {
+    String expectedResult = "Course Not Found 404 NOT_FOUND";
+    ResponseEntity<?> response = testRouteController.isCourseFull("IEOR", 12345);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to see if we cause an exception to the isCourseFull method by inputting a valid
+   * courseCode with an invalid department code.
+   */
+  @Test
+  public void isCourseFullInvalidInputTest() {
+    String expectedResult = "An Error has occurred 500 INTERNAL_SERVER_ERROR";
+    ResponseEntity<?> response = testRouteController.isCourseFull("COMS",null);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to see if we can grab the number of compsci majors within our 
+   * database. 
+   */
+  @Test
+  public void getMajorCtFromValidDeptTest() {
+    String expectedResult = "There are: 2700 majors in the department 200 OK";
+    ResponseEntity<?> response = testRouteController.getMajorCtFromDept("COMS");
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+    assertEquals(expectedResult, responseString);
   }
   
   /**

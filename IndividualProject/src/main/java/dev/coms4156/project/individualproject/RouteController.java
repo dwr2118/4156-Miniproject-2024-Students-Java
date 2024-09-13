@@ -169,7 +169,7 @@ public class RouteController {
         departmentMapping =
             IndividualProjectApplication.myFileDatabase.getDepartmentMapping();
         return new ResponseEntity<>(
-            "There are: " + -departmentMapping.get(deptCode).getNumberOfMajors()
+            "There are: " + departmentMapping.get(deptCode).getNumberOfMajors()
             + " majors in the department", HttpStatus.OK);
       }
       return new ResponseEntity<>("Department Not Found", HttpStatus.FORBIDDEN);
