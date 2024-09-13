@@ -6,11 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -56,9 +55,9 @@ public class ProjectUnitTests {
     testApp.run(sampleSetupArgs);
     
     MyFileDatabase testDatabase = testApp.myFileDatabase;
-    HashMap<String, Department> testMapping = testDatabase.getDepartmentMapping();
+    Map<String, Department> testMapping = testDatabase.getDepartmentMapping();
     Department compSci = testMapping.get("COMS");
-    HashMap<String, Course> comsCourses = compSci.getCourseSelection();
+    Map<String, Course> comsCourses = compSci.getCourseSelection();
     Course coms1004 = comsCourses.get("1004");
     String expectedResult = "Adam Cannon";
     assertEquals(expectedResult, coms1004.getInstructorName());
@@ -106,7 +105,7 @@ public class ProjectUnitTests {
   @Test
   public void testSaveUponTermination() {
     File file = new File("./data.txt");
-    testApp.myFileDatabase.saveContentsToFile();
+    testApp.saveData = false;
     testApp.onTermination();
     assertTrue(file.exists());
   }

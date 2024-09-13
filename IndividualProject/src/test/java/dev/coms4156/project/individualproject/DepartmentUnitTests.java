@@ -2,8 +2,6 @@ package dev.coms4156.project.individualproject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
@@ -98,6 +96,6 @@ public class DepartmentUnitTests {
    * The test department instance used for testing and the courses held within the Department.
    */
   public static Department testDept;
-  public static HashMap<String, Course> courses;
+  public static Map<String, Course> courses;
 }
 
