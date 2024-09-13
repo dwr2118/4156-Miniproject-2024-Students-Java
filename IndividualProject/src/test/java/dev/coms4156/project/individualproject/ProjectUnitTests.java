@@ -54,7 +54,7 @@ public class ProjectUnitTests {
     }
     String[] sampleSetupArgs = {"setup"};
     testApp.run(sampleSetupArgs);
-
+    
     MyFileDatabase testDatabase = testApp.myFileDatabase;
     HashMap<String, Department> testMapping = testDatabase.getDepartmentMapping();
     Department compSci = testMapping.get("COMS");
@@ -71,7 +71,6 @@ public class ProjectUnitTests {
   public void testRunAppWithoutSetup() {
     String[] sampleNonSetupArgs = {"already set"};
     testApp.run(sampleNonSetupArgs);
-
     MyFileDatabase testDatabase = testApp.myFileDatabase;
     assertNotNull(testDatabase);
   }
@@ -94,7 +93,6 @@ public class ProjectUnitTests {
    */
   @Test
   public void testDataFileReset() {
-
     MyFileDatabase testDatabase = testApp.myFileDatabase;
     testDatabase.setMapping(null);
     testApp.resetDataFile();
@@ -107,7 +105,6 @@ public class ProjectUnitTests {
    */
   @Test
   public void testSaveUponTermination() {
-
     File file = new File("./data.txt");
     testApp.myFileDatabase.saveContentsToFile();
     testApp.onTermination();

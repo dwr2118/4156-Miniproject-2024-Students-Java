@@ -522,6 +522,7 @@ public class RouteUnitTests {
     ResponseEntity<?> response = testRouteController.isCourseFull("COMS", null);
     HttpStatusCode responseStatus = response.getStatusCode();
     String responseString = response.getBody() + " " + responseStatus.toString();
+
     assertEquals(expectedResult, responseString);
   }
   
