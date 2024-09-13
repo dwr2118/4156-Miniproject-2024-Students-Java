@@ -1,26 +1,25 @@
 1. enrollStudent returned false when it could enroll students within a course. Also, enrollStudent doesn’t check if the capacity of the class is hit
 2. dropStudent originally returned false but it should check if the actual variable’s value has decreased, then return the appropriate boolean value
 3. isCourseFull should be checking if student count is equal to capacity
-4. There’s no way to check the course’s current enrollmentAmount ????
-5. getCourseLocation() was grabbing the instructorName instead of courseLocation, silly mistake :P
-6. getInstructorName() was grabbing the courseLocation instead of instructor's name, :PP
-7. result.toString() was in quotes so the result of the Department.toString() would be incorrect
-8. Misplaced minus sign on the getNumberOfMajors() within [Department.java](http://Department.java) 
-9. getDepartmentChair() returning a string instead of the departmentChair variable 
-10. retrieveDepartment() shouldn’t return an HttpStatus of OK if the department isn’t found 
-11. Sending HTTP status 200 Ok when an error occurred. I changed it to 500 INTERNAL_SERVICE_ERROR from handleException() method in RouteController.java
-12. retrieveCourse, sending a FORBIDDEN HTTP Status when a course was actually found and the if condition checking for valid courseCode within the courses mapping is confusing, so this was switched to check for the occurrence of a key instead of its absence 
-13. retrieveCourse also takes in an int type while conducting operations on an Integer class
-14. isCourseFull, findsCourseLocation, findCourseInstructor, findCourseTime, dropStudent, setEnrollmentCount, changeCourseTime, changeCourseTeacher, changeCourseLocationshould take Integer as an argument into the method for testing purposes 
-15. getMajorCtFromDept had a minus sign in the return statement of the method 
-16. isCourseFull when it calls retrieveCourse( dept, course) and it can’t find the course then we should kick back its HttpStatusCode not HttpStatus not found because we don’t know the statuscode that came from retrieveCourse then?
-17. getMajorCtFromDept returned HttpForbidden when it should’ve been Http.Not Found when you pass in an invalid department 
-18. findCourseTime’s return statement didn’t include the courseTime extracted from the valid course object 
-19. setEnrollmentCount had incorrect version of attribute (ie: attributed) within the valid enrollment count setting branch 
-20. removeMajorFromDept didn’t want to drop the major count back to 2700 so this made an issue with other tests 
-21. changeCourseTime had incorrect grammar for return string: attributed → attribute 
-22. changeCourseTeacher had incorrect grammar for return string: attributed → attribute 
-23. changeCourseLocation had incorrect grammar for return string: attributed → attribute
+4. getCourseLocation() was grabbing the instructorName instead of courseLocation, silly mistake :P
+5. getInstructorName() was grabbing the courseLocation instead of instructor's name, :PP
+6. result.toString() was in quotes so the result of the Department.toString() would be incorrect
+7. Misplaced minus sign on the getNumberOfMajors() within [Department.java](http://Department.java) 
+8. getDepartmentChair() returning a string instead of the departmentChair variable 
+9. retrieveDepartment() shouldn’t return an HttpStatus of OK if the department isn’t found 
+10. Sending HTTP status 200 Ok when an error occurred. I changed it to 500 INTERNAL_SERVICE_ERROR from handleException() method in RouteController.java
+11. retrieveCourse, sending a FORBIDDEN HTTP Status when a course was actually found and the if condition checking for valid courseCode within the courses mapping is confusing, so this was switched to check for the occurrence of a key instead of its absence 
+12. retrieveCourse also takes in an int type while conducting operations on an Integer class
+13. isCourseFull, findsCourseLocation, findCourseInstructor, findCourseTime, dropStudent, setEnrollmentCount, changeCourseTime, changeCourseTeacher, changeCourseLocationshould take Integer as an argument into the method for testing purposes 
+14. getMajorCtFromDept had a minus sign in the return statement of the method 
+15. isCourseFull when it calls retrieveCourse( dept, course) and it can’t find the course then we should kick back its HttpStatusCode not HttpStatus not found because we don’t know the statuscode that came from retrieveCourse then?
+16. getMajorCtFromDept returned HttpForbidden when it should’ve been Http.Not Found when you pass in an invalid department 
+17. findCourseTime’s return statement didn’t include the courseTime extracted from the valid course object 
+18. setEnrollmentCount had incorrect version of attribute (ie: attributed) within the valid enrollment count setting branch 
+19. removeMajorFromDept didn’t want to drop the major count back to 2700 so this made an issue with other tests 
+20. changeCourseTime had incorrect grammar for return string: attributed → attribute 
+21. changeCourseTeacher had incorrect grammar for return string: attributed → attribute 
+22. changeCourseLocation had incorrect grammar for return string: attributed → attribute
 
 
 ./src/main/java/dev/coms4156/project/individualproject/MyFileDatabase.java:23:  LooseCoupling:  Avoid using implementation types like 'HashMap'; use the interface instead -> utilize Map instances instead of HashMap where possible
