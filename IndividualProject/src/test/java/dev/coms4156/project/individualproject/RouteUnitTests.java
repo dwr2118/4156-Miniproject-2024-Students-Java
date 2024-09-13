@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.NullPointerException;
 import java.net.http.HttpRequest;
 import java.util.HashMap;
 import org.junit.jupiter.api.BeforeAll;
@@ -207,19 +208,6 @@ public class RouteUnitTests {
     String responseString = response.getBody() + " " + responseStatus.toString();
     assertEquals(expectedResult, responseString);
   }
-
-  // /**
-  //  * Testing to see if we can grab the number of majors if the inputted 
-  //  * department is null. 
-  //  */
-  // @Test
-  // public void getMajorCtFromInvalidInputDeptTest() {
-  //   String expectedResult = "An Error has occurred 500 INTERNAL_SERVER_ERROR";
-  //   ResponseEntity<?> response = testRouteController.getMajorCtFromDept(null);
-  //   HttpStatusCode responseStatus = response.getStatusCode();
-  //   String responseString = response.getBody() + " " + responseStatus.toString();
-  //   assertEquals(expectedResult, responseString);
-  // }
 
   /**
    * Testing to see if we can grab the CS's department's Department Chair.
@@ -522,6 +510,18 @@ public class RouteUnitTests {
     HttpStatusCode responseStatus = response.getStatusCode();
     String responseString = response.getBody() + " " + responseStatus.toString();
 
+    assertEquals(expectedResult, responseString);
+  }
+
+  /**
+   * Testing to make sure we can actually handle exceptions. 
+   */
+  @Test
+  public void handleExceptionTesting() {
+    String expectedResult = "An Error has occurred 500 INTERNAL_SERVER_ERROR";
+    ResponseEntity<?> response = testRouteController.isCourseFull("COMS", null);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
     assertEquals(expectedResult, responseString);
   }
   
