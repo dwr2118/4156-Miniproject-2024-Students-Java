@@ -5,11 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,8 +37,8 @@ public class DatabaseUnitTests {
     testInvalidDb.delete();
 
     testDatabase = new MyFileDatabase(1, testFilePath);
-    HashMap<String, Course> courses = new HashMap<>();
-    HashMap<String, Department> testMapping = new HashMap<>();
+    Map<String, Course> courses = new HashMap<>();
+    Map<String, Department> testMapping = new HashMap<>();
 
     Course coms1004 = new Course("Adam Cannon", "417 IAB", "11:40-12:55", 400);
     coms1004.setEnrolledStudentCount(249);
@@ -81,8 +78,8 @@ public class DatabaseUnitTests {
    */
   @Test
   public void getDeptMappingTest() {
-    HashMap<String, Department> testMapping = testDatabase.getDepartmentMapping();
-    HashMap<String, Course> compSciCourses = testMapping.get("COMS").getCourseSelection();
+    Map<String, Department> testMapping = testDatabase.getDepartmentMapping();
+    Map<String, Course> compSciCourses = testMapping.get("COMS").getCourseSelection();
     assertEquals("Adam Cannon", compSciCourses.get("1004").getInstructorName());
   }
 

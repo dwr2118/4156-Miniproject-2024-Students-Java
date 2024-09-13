@@ -69,7 +69,7 @@ public class Course implements Serializable {
     return this.courseTimeSlot;
   }
   
-  
+  @Override
   public String toString() {
     return "\nInstructor: " + instructorName + "; Location: " + courseLocation
            + "; Time: " + courseTimeSlot;
@@ -97,7 +97,8 @@ public class Course implements Serializable {
   
   
   public boolean isCourseFull() {
-    return enrolledStudentCount >= enrollmentCapacity ? true : false;
+
+    return enrolledStudentCount >= enrollmentCapacity;
   }
   
   @Serial

@@ -1,23 +1,15 @@
 package dev.coms4156.project.individualproject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.net.http.HttpRequest;
 import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 
 /**
@@ -207,19 +199,6 @@ public class RouteUnitTests {
     String responseString = response.getBody() + " " + responseStatus.toString();
     assertEquals(expectedResult, responseString);
   }
-
-  // /**
-  //  * Testing to see if we can grab the number of majors if the inputted 
-  //  * department is null. 
-  //  */
-  // @Test
-  // public void getMajorCtFromInvalidInputDeptTest() {
-  //   String expectedResult = "An Error has occurred 500 INTERNAL_SERVER_ERROR";
-  //   ResponseEntity<?> response = testRouteController.getMajorCtFromDept(null);
-  //   HttpStatusCode responseStatus = response.getStatusCode();
-  //   String responseString = response.getBody() + " " + responseStatus.toString();
-  //   assertEquals(expectedResult, responseString);
-  // }
 
   /**
    * Testing to see if we can grab the CS's department's Department Chair.
@@ -524,6 +503,19 @@ public class RouteUnitTests {
 
     assertEquals(expectedResult, responseString);
   }
+
+  /**
+   * Testing to make sure we can actually handle exceptions. 
+   */
+  @Test
+  public void handleExceptionTesting() {
+    String expectedResult = "An Error has occurred 500 INTERNAL_SERVER_ERROR";
+    ResponseEntity<?> response = testRouteController.isCourseFull("COMS", null);
+    HttpStatusCode responseStatus = response.getStatusCode();
+    String responseString = response.getBody() + " " + responseStatus.toString();
+
+    assertEquals(expectedResult, responseString);
+  }
   
   /**
    * The test department instance used for testing and the courses held within the Department.
@@ -531,6 +523,6 @@ public class RouteUnitTests {
    */
   public static RouteController testRouteController;
   public static Department testDept;
-  public static HashMap<String, Course> courses;
+  public static Map<String, Course> courses;
 }
 
